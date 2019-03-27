@@ -12,8 +12,7 @@ public class Main extends Application {
 
 
     private BorderPane root;
-
-    // Chessboard panel
+    // Chessboard   pane l
     private static MainPane mainPane;
 
     @Override

@@ -6,7 +6,7 @@ import java.util.Observable;
 /**
  * chess pieces model, i and j represent the position information of the chess pieces,
  *
- * color represents the color of the current chess pieces, black is the black, white is the white,
+ * color represents the  color of the current chess pieces, black is the black, white is the white,
  *
  * green is the current no-seed.
  */

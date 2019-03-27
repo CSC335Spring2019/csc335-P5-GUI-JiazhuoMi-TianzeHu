@@ -3,7 +3,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * The class that saves chessboard data, implements Serializable, can be serialized to save
+ * The class that saves chessboard  data, implements Serializable, can be serialized to save
  */
 public class ReversiBoard implements Serializable {
 

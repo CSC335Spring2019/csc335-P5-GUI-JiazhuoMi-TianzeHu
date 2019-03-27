@@ -16,7 +16,7 @@ import java.io.*;
 
 
 /**
- * Chess board board, we can play here, above is a chessboard composed of 8*8 square drop points,
+ * Chess board board, w e can play here, above is a chessboard composed of 8*8 square drop points,
  * the following Label shows the number of black and white chessboard in the current expectation.
  */
 public class MainPane extends BorderPane{
