@@ -25,7 +25,9 @@ public class Data implements Serializable {
     public void setReversiModels(ReversiModel[][] reversiModels) {
         this.reversiModels = reversiModels;
     }
-
+    /**
+     * 
+     */
     public boolean isBlackPlay() {
         return isBlackPlay;
     }
