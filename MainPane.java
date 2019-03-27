@@ -230,7 +230,7 @@ public class MainPane extends BorderPane{
                 }
             }
 
-            //水平方向判断
+           
             for(int j = 0;j < 8; j++){
                 if(myObservables[x][j].getChessColor() == Color.BLACK){
 
@@ -634,7 +634,7 @@ public class MainPane extends BorderPane{
 
         }
         else
-        // 若是白方下
+      
         {
             for (int i = 0; i < 8; i++)
             {
@@ -885,7 +885,7 @@ public class MainPane extends BorderPane{
             ReversiBoard reversiBoard = new ReversiBoard(myObservables, isBlackPlay);
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("save_game.dat")));
             oos.writeObject(reversiBoard);
-            System.out.println("reversiBoard 对象序列化成功！");
+            System.out.println("reversiBoard");
             oos.close();
 
             setAlert("Save successfully!");
