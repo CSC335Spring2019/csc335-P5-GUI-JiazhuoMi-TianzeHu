@@ -119,6 +119,19 @@ public class MainPane extends BorderPane{
         actionPerformed(i, j);
     }
 
+
+    public void test(int x, int y) {
+
+        System.out.println("      mouseClick      x = " + x + "    y = " + y);
+
+        int j = getIJ(x);
+        int i = getIJ(y);
+
+        System.out.println("      mouseClick      i = " + i + "    j = " + j);
+
+        actionPerformed(i, j);
+    }
+
     /**
      * Get the position of the chessboard according to the position of the mouse click
      * @param y
@@ -942,4 +955,59 @@ public class MainPane extends BorderPane{
 
     }
 
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
+    }
+
+    public ReversiBoard[][] getReversiBoards() {
+        return reversiBoards;
+    }
+
+    public void setReversiBoards(ReversiBoard[][] reversiBoards) {
+        this.reversiBoards = reversiBoards;
+    }
+
+    public ReversiModel[][] getReversiModels() {
+        return reversiModels;
+    }
+
+    public void setReversiModels(ReversiModel[][] reversiModels) {
+        this.reversiModels = reversiModels;
+    }
+
+    public boolean isBlackPlay() {
+        return isBlackPlay;
+    }
+
+    public void setBlackPlay(boolean blackPlay) {
+        isBlackPlay = blackPlay;
+    }
+
+    public boolean isGameover() {
+        return gameover;
+    }
+
+    public void setGameover(boolean gameover) {
+        this.gameover = gameover;
+    }
+
+    public int getBlackChess() {
+        return blackChess;
+    }
+
+    public void setBlackChess(int blackChess) {
+        this.blackChess = blackChess;
+    }
+
+    public int getWhiteChess() {
+        return whiteChess;
+    }
+
+    public void setWhiteChess(int whiteChess) {
+        this.whiteChess = whiteChess;
+    }
 }
