@@ -6,11 +6,11 @@ import java.util.Observable;
 /**
  * chess pieces model, i and j represent the position information of the chess pieces,
  *
- * color represents the  color of the current chess pieces, black is the black, white is the white,
+ * color represents the color of the current chess pieces, black is the black, white is the white,
  *
  * green is the current no-seed.
  */
-public class MyObservable extends Observable implements Serializable {
+public class ReversiModel extends Observable implements Serializable {
 
     private static final long serialVersionUID = 12L;
 
@@ -20,13 +20,13 @@ public class MyObservable extends Observable implements Serializable {
 
     private int color;
 
-    public MyObservable(int i, int j, int color) {
+    public ReversiModel(int i, int j, int color) {
         this.i = i;
         this.j = j;
         this.color = color;
     }
 
-    public MyObservable(int i, int j, Color color) {
+    public ReversiModel(int i, int j, Color color) {
         this.i = i;
         this.j = j;
         setChessColor(color);
@@ -39,10 +39,10 @@ public class MyObservable extends Observable implements Serializable {
         notifyObservers(getChessColor());
     }
 
-    public void updateObserver(MyObservable myObservable) {
-        this.i = myObservable.getI();
-        this.j = myObservable.getJ();
-        this.color = myObservable.getColor();
+    public void updateObserver(ReversiModel reversiModel) {
+        this.i = reversiModel.getI();
+        this.j = reversiModel.getJ();
+        this.color = reversiModel.getColor();
         setChanged();
         notifyObservers(getChessColor());
     }
@@ -92,7 +92,7 @@ public class MyObservable extends Observable implements Serializable {
 
     @Override
     public String toString() {
-        return "MyObservable{" +
+        return "ReversiModel{" +
             "i=" + i +
             ", j=" + j +
             ", color=" + color +

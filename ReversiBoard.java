@@ -1,44 +1,61 @@
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
-import java.io.Serializable;
-import java.util.Arrays;
+import java.util.Observable;
+import java.util.Observer;
+
 
 /**
- * The class that saves chessboard  data, implements Serializable, can be serialized to save
+ * The StackPane of the chessboard consists of 8*8 StackPane.
+ * because implements Observer monitors the changes of ReversiModel to update the color of the chessboard.
  */
-public class ReversiBoard implements Serializable {
+public class ReversiBoard extends StackPane implements Observer {
 
-    private static final long serialVersionUID = 1L;
+    private Circle circle;
 
-    private MyObservable[][] myObservables;
+    private int i;
 
-    private boolean isBlackPlay;
+    private int j;
 
-    public ReversiBoard(MyObservable[][] myObservables, boolean isBlackPlay) {
-        this.myObservables = myObservables;
-        this.isBlackPlay = isBlackPlay;
+    /**
+     * Loading a circular shap on stackPane
+     * @param i
+     * @param j
+     * @param reversiModel
+     */
+    public ReversiBoard(int i, int j, ReversiModel reversiModel) {
+        this.i = i;
+        this.j = j;
+        reversiModel.addObserver(this );
+        this.setPrefSize(44, 44);
+        this.getChildren().add(setDropShadow(Color.BLACK));
+        Border border = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
+            CornerRadii.EMPTY, BorderWidths.DEFAULT));
+        this.setBorder(border);
+        this.setBackground(new Background(new BackgroundFill(Color.GREEN,null,null)));
     }
 
-    public MyObservable[][] getMyObservables() {
-        return myObservables;
+    private Circle setDropShadow(Color color) {
+
+        circle = new Circle();
+        circle.setCenterX(22.0f);
+        circle.setCenterY(22.0f);
+        circle.setRadius(20.0f);
+        circle.setFill(color);
+        circle.setOpacity(0);
+        return circle;
     }
 
-    public void setMyObservables(MyObservable[][] myObservables) {
-        this.myObservables = myObservables;
-    }
-
-    public boolean isBlackPlay() {
-        return isBlackPlay;
-    }
-
-    public void setBlackPlay(boolean blackPlay) {
-        isBlackPlay = blackPlay;
+    public void setCircleColor(Color color) {
+        circle.setFill(color);
+        circle.setOpacity(1);
     }
 
     @Override
-    public String toString() {
-        return "ReversiBoard{" +
-            "myObservables=" + Arrays.toString(myObservables) +
-            ", isBlackPlay=" + isBlackPlay +
-            '}';
+    public void update(Observable o, Object arg) {
+        setCircleColor((Color) arg);
+
+        System.out.println(" mystackPane   i = " + i + "  j = " + j + "   setColor :" + ((Color) arg).toString());
     }
 }

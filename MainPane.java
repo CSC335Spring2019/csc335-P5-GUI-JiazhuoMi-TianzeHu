@@ -16,16 +16,16 @@ import java.io.*;
 
 
 /**
- * Chess board board, w e can play here, above is a chessboard composed of 8*8 square drop points,
+ * Chess board board, we can play here, above is a chessboard composed of 8*8 square drop points,
  * the following Label shows the number of black and white chessboard in the current expectation.
  */
 public class MainPane extends BorderPane{
 
     private Label label;
 
-    private MyStackPane[][] myStackPanes;
+    private ReversiBoard[][] reversiBoards;
 
-    private MyObservable[][] myObservables;
+    private ReversiModel[][] reversiModels;
 
     private boolean isBlackPlay = true;
 
@@ -39,8 +39,8 @@ public class MainPane extends BorderPane{
      * Load the chessboard and build the basic data
      */
     public MainPane( ) {
-        this.myStackPanes = new MyStackPane[8][8];
-        this.myObservables = new MyObservable[8][8];
+        this.reversiBoards = new ReversiBoard[8][8];
+        this.reversiModels = new ReversiModel[8][8];
         this.setPrefSize(368, 398);
         this.setCenter(setTilePane());
         this.setBottom(setLabel());
@@ -67,23 +67,23 @@ public class MainPane extends BorderPane{
 
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
-                myObservables[i][j] = new MyObservable(i, j, Color.GREEN);
-                myStackPanes[i][j] = new MyStackPane(i, j, myObservables[i][j]);
-                tilePane.getChildren().add(myStackPanes[i][j]);
+                reversiModels[i][j] = new ReversiModel(i, j, Color.GREEN);
+                reversiBoards[i][j] = new ReversiBoard(i, j, reversiModels[i][j]);
+                tilePane.getChildren().add(reversiBoards[i][j]);
             }
         }
 
-        myStackPanes[3][3].setCircleColor(Color.WHITE);
-        myObservables[3][3].setChessColor(Color.WHITE);
+        reversiBoards[3][3].setCircleColor(Color.WHITE);
+        reversiModels[3][3].setChessColor(Color.WHITE);
         
-        myStackPanes[3][4].setCircleColor(Color.BLACK);
-        myObservables[3][4].setChessColor(Color.BLACK);
+        reversiBoards[3][4].setCircleColor(Color.BLACK);
+        reversiModels[3][4].setChessColor(Color.BLACK);
         
-        myStackPanes[4][3].setCircleColor(Color.BLACK);
-        myObservables[4][3].setChessColor(Color.BLACK);
+        reversiBoards[4][3].setCircleColor(Color.BLACK);
+        reversiModels[4][3].setChessColor(Color.BLACK);
         
-        myStackPanes[4][4].setCircleColor(Color.WHITE);
-        myObservables[4][4].setChessColor(Color.WHITE);
+        reversiBoards[4][4].setCircleColor(Color.WHITE);
+        reversiModels[4][4].setChessColor(Color.WHITE);
 
         borderPane.setCenter(tilePane);
         return borderPane;
@@ -150,10 +150,10 @@ public class MainPane extends BorderPane{
     private void actionPerformed(int i, int j) {
 
         if(gameover){
-            setAlert("The chess game is over. Please start again!");
+            showAndWait("The chess game is over. Please start again!");
         }else{
             if(!isValidPosition(i, j)){
-                setAlert("Illegal location, please reset!");
+                showAndWait("Illegal location, please reset!");
             } else {
                 refresh(i, j);
                 changePlayer();
@@ -163,7 +163,7 @@ public class MainPane extends BorderPane{
                         gameover = true;
                         whoWin();
                     }else{
-                        setAlert("The other side has nowhere to go!");
+                        showAndWait("The other side has nowhere to go!");
                     }
 
 
@@ -181,7 +181,7 @@ public class MainPane extends BorderPane{
      */
     private boolean isValidPosition(int x, int y){
 
-        if(myObservables[x][y].getChessColor() != Color.GREEN) {
+        if(reversiModels[x][y].getChessColor() != Color.GREEN) {
             return false;
         }
 
@@ -191,9 +191,9 @@ public class MainPane extends BorderPane{
 
             // Vertical Direction Judgment
             for(int i = 0; i < 8; i++){
-                if(myObservables[i][y].getChessColor() == Color.BLACK){
+                if(reversiModels[i][y].getChessColor() == Color.BLACK){
 
-                    System.out.println(" Vertical： myObservables[" + i + "][" + y + "] is BLACK");
+                    System.out.println(" Vertical： reversiModels[" + i + "][" + y + "] is BLACK");
 
                     if((i - x) >= 2){
 
@@ -202,9 +202,9 @@ public class MainPane extends BorderPane{
                         int count = 0;
                         for(int k = x; k < i; k++){
 
-                            if(myObservables[k][y].getChessColor() == Color.WHITE){
+                            if(reversiModels[k][y].getChessColor() == Color.WHITE){
                                 count++;
-                                System.out.println("Vertical： myObservables[" + k + "][" + y + "] is WHITE  , count = " + count);
+                                System.out.println("Vertical： reversiModels[" + k + "][" + y + "] is WHITE  , count = " + count);
                             }
                         }
 
@@ -216,9 +216,9 @@ public class MainPane extends BorderPane{
                     if((x - i) >= 2){
                         int count = 0;
                         for(int k = x;k > i; k--){
-                            if(myObservables[k][y].getChessColor() == Color.WHITE){
+                            if(reversiModels[k][y].getChessColor() == Color.WHITE){
                                 count++;
-                                System.out.println("Vertical： myObservables[" + k + "][" + y + "] is WHITE  , count = " + count);
+                                System.out.println("Vertical： reversiModels[" + k + "][" + y + "] is WHITE  , count = " + count);
                             }
                         }
 
@@ -232,13 +232,13 @@ public class MainPane extends BorderPane{
 
            
             for(int j = 0;j < 8; j++){
-                if(myObservables[x][j].getChessColor() == Color.BLACK){
+                if(reversiModels[x][j].getChessColor() == Color.BLACK){
 
                     if((j - y) >= 2){
 
                         int count = 0;
                         for(int k = y; k < j; k++){
-                            if(myObservables[x][k].getChessColor() ==  Color.WHITE) {
+                            if(reversiModels[x][k].getChessColor() ==  Color.WHITE) {
                                 count++;
                             }
                         }
@@ -249,7 +249,7 @@ public class MainPane extends BorderPane{
                     if((y - j) >= 2){
                         int count = 0;
                         for(int k = y;k > j; k--){
-                            if(myObservables[x][k].getChessColor() == Color.WHITE) {
+                            if(reversiModels[x][k].getChessColor() == Color.WHITE) {
                                 count++;
                             }
                         }
@@ -263,12 +263,12 @@ public class MainPane extends BorderPane{
 
             for(int i = 0;i < 8; i++){
                 for(int j = 0;j < 8; j++){
-                    if(myObservables[i][j].getChessColor() == Color.BLACK){
+                    if(reversiModels[i][j].getChessColor() == Color.BLACK){
                         if((x - i) == (y - j) && (x - i) >= 2){
                             int yy = y;
                             int count = 0;
                             for(int k = x; k > i; k--){
-                                if(myObservables[k][yy].getChessColor() == Color.WHITE)
+                                if(reversiModels[k][yy].getChessColor() == Color.WHITE)
                                     count++;
                                 yy--;
                             }
@@ -279,7 +279,7 @@ public class MainPane extends BorderPane{
                             int yy = y;
                             int count = 0;
                             for(int k = x; k > i; k--){
-                                if(myObservables[k][yy].getChessColor() == Color.WHITE){
+                                if(reversiModels[k][yy].getChessColor() == Color.WHITE){
                                     count++;
                                 }
                                 yy++;
@@ -291,7 +291,7 @@ public class MainPane extends BorderPane{
                             int yy = y;
                             int count = 0;
                             for(int k = x; k < i; k++){
-                                if(myObservables[k][yy].getChessColor() == Color.WHITE)
+                                if(reversiModels[k][yy].getChessColor() == Color.WHITE)
                                     count++;
                                 yy--;
                             }
@@ -302,7 +302,7 @@ public class MainPane extends BorderPane{
                             int yy = y;
                             int count = 0;
                             for(int k = x; k < i; k++){
-                                if(myObservables[k][yy].getChessColor() == Color.WHITE)
+                                if(reversiModels[k][yy].getChessColor() == Color.WHITE)
                                     count++;
                                 yy++;
                             }
@@ -316,14 +316,14 @@ public class MainPane extends BorderPane{
         } else{
 
             for (int i = 0; i < 8; i++) {
-                if (myObservables[i][y].getChessColor() == Color.WHITE) {
+                if (reversiModels[i][y].getChessColor() == Color.WHITE) {
 
 
                     if ((i - x) >= 2) {
 
                         int count = 0;
                         for (int k = x; k < i; k++) {
-                            if (myObservables[k][y].getChessColor() == Color.BLACK) {
+                            if (reversiModels[k][y].getChessColor() == Color.BLACK) {
                                 count++;
                             }
 
@@ -335,7 +335,7 @@ public class MainPane extends BorderPane{
                     if ((x - i) >= 2) {
                         int count = 0;
                         for (int k = x; k > i; k--) {
-                            if (myObservables[k][y].getChessColor() == Color.BLACK) {
+                            if (reversiModels[k][y].getChessColor() == Color.BLACK) {
                                 count++;
                             }
                         }
@@ -347,12 +347,12 @@ public class MainPane extends BorderPane{
             }
 
             for (int j = 0; j < 8; j++) {
-                if (myObservables[x][j].getChessColor() == Color.WHITE) {
+                if (reversiModels[x][j].getChessColor() == Color.WHITE) {
 
                     if ((j - y) >= 2) {
                         int count = 0;
                         for (int k = y; k < j; k++) {
-                            if (myObservables[x][k].getChessColor() == Color.BLACK) {
+                            if (reversiModels[x][k].getChessColor() == Color.BLACK) {
                                 count++;
                             }
                         }
@@ -365,7 +365,7 @@ public class MainPane extends BorderPane{
 
                         int count = 0;
                         for (int k = y; k > j; k--) {
-                            if (myObservables[x][k].getChessColor() == Color.BLACK) {
+                            if (reversiModels[x][k].getChessColor() == Color.BLACK) {
                                 count++;
                             }
                         }
@@ -378,12 +378,12 @@ public class MainPane extends BorderPane{
 
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
-                     if (myObservables[i][j].getChessColor() == Color.WHITE) {
+                     if (reversiModels[i][j].getChessColor() == Color.WHITE) {
                         if ((x - i) == (y - j) && (x - i) >= 2) {
                             int yy = y;
                             int count = 0;
                             for (int k = x; k > i; k--) {
-                                if (myObservables[k][yy].getChessColor() == Color.BLACK) {
+                                if (reversiModels[k][yy].getChessColor() == Color.BLACK) {
                                     count++;
                                 }
                                 yy--;
@@ -397,7 +397,7 @@ public class MainPane extends BorderPane{
                             int yy = y;
                             int count = 0;
                             for (int k = x; k > i; k--) {
-                                if (myObservables[k][yy].getChessColor() == Color.BLACK)
+                                if (reversiModels[k][yy].getChessColor() == Color.BLACK)
                                 {
                                     count++;
                                 }
@@ -412,7 +412,7 @@ public class MainPane extends BorderPane{
                             int yy = y;
                             int count = 0;
                             for (int k = x; k < i; k++) {
-                                if (myObservables[k][yy].getChessColor() == Color.BLACK) {
+                                if (reversiModels[k][yy].getChessColor() == Color.BLACK) {
                                     count++;
                                 }
                                 yy--;
@@ -425,7 +425,7 @@ public class MainPane extends BorderPane{
                             int yy = y;
                             int count = 0;
                             for (int k = x; k < i; k++) {
-                                if (myObservables[k][yy].getChessColor() == Color.BLACK) {
+                                if (reversiModels[k][yy].getChessColor() == Color.BLACK) {
                                     count++;
                                 }
                                 yy++;
@@ -452,21 +452,21 @@ public class MainPane extends BorderPane{
         {
             for (int i = 0; i < 8; i++)
             {
-                if (myObservables[i][y].getChessColor() == Color.BLACK)
+                if (reversiModels[i][y].getChessColor() == Color.BLACK)
                 {
                     if ((i - x) >= 2)
                     {
                         int count = 0;
                         for (int k = x; k < i; k++)
                         {
-                            if (myObservables[k][y].getChessColor() == Color.WHITE)
+                            if (reversiModels[k][y].getChessColor() == Color.WHITE)
                                 count++;
                         }
 
                         if (count == (i - x - 1))
                         {
                             for (int k = x; k < i; k++)
-                                myObservables[k][y].updateObserver(Color.BLACK);
+                                reversiModels[k][y].updateObserver(Color.BLACK);
                         }
 
                     }
@@ -476,14 +476,14 @@ public class MainPane extends BorderPane{
                         int count = 0;
                         for (int k = x; k > i; k--)
                         {
-                            if (myObservables[k][y].getChessColor() == Color.WHITE)
+                            if (reversiModels[k][y].getChessColor() == Color.WHITE)
                                 count++;
                         }
 
                         if (count == (x - i - 1))
                         {
                             for (int k = x; k > i; k--)
-                                myObservables[k][y].updateObserver(Color.BLACK);
+                                reversiModels[k][y].updateObserver(Color.BLACK);
                         }
                     }
                 }
@@ -491,21 +491,21 @@ public class MainPane extends BorderPane{
 
             for (int j = 0; j < 8; j++)
             {
-                if (myObservables[x][j].getChessColor() == Color.BLACK)
+                if (reversiModels[x][j].getChessColor() == Color.BLACK)
                 {
                     if ((j - y) >= 2)
                     {
                         int count = 0;
                         for (int k = y; k < j; k++)
                         {
-                            if (myObservables[x][k].getChessColor() == Color.WHITE)
+                            if (reversiModels[x][k].getChessColor() == Color.WHITE)
                                 count++;
                         }
 
                         if (count == (j - y - 1))
                         {
                             for (int k = y; k < j; k++)
-                                myObservables[x][k].updateObserver(Color.BLACK);
+                                reversiModels[x][k].updateObserver(Color.BLACK);
                         }
                     }
 
@@ -514,13 +514,13 @@ public class MainPane extends BorderPane{
                         int count = 0;
                         for (int k = y; k > j; k--)
                         {
-                            if (myObservables[x][k].getChessColor() == Color.WHITE)
+                            if (reversiModels[x][k].getChessColor() == Color.WHITE)
                                 count++;
                         }
                         if (count == (y - j - 1))
                         {
                             for (int k = y; k > j; k--)
-                                myObservables[x][k].updateObserver(Color.BLACK);
+                                reversiModels[x][k].updateObserver(Color.BLACK);
                         }
                     }
                 }
@@ -530,7 +530,7 @@ public class MainPane extends BorderPane{
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    if (myObservables[i][j].getChessColor() == Color.BLACK)
+                    if (reversiModels[i][j].getChessColor() == Color.BLACK)
                     {
                         if ((x - i) == (y - j) && (x - i) >= 2)
                         {
@@ -538,7 +538,7 @@ public class MainPane extends BorderPane{
                             int count = 0;
                             for (int k = x; k > i; k--)
                             {
-                                if (myObservables[k][yy].getChessColor() == Color.WHITE)
+                                if (reversiModels[k][yy].getChessColor() == Color.WHITE)
                                 {
                                     count++;
                                 }
@@ -550,7 +550,7 @@ public class MainPane extends BorderPane{
                                 yy = y;
                                 for (int k = x; k > i; k--)
                                 {
-                                    myObservables[k][yy].updateObserver(Color.BLACK);
+                                    reversiModels[k][yy].updateObserver(Color.BLACK);
                                     yy--;
                                 }
                             }
@@ -562,7 +562,7 @@ public class MainPane extends BorderPane{
                             int count = 0;
                             for (int k = x; k > i; k--)
                             {
-                                if (myObservables[k][yy].getChessColor() == Color.WHITE)
+                                if (reversiModels[k][yy].getChessColor() == Color.WHITE)
                                 {
                                     count++;
                                 }
@@ -574,7 +574,7 @@ public class MainPane extends BorderPane{
                                 yy = y;
                                 for (int k = x; k > i; k--)
                                 {
-                                    myObservables[k][yy].updateObserver(Color.BLACK);
+                                    reversiModels[k][yy].updateObserver(Color.BLACK);
                                     yy++;
                                 }
                             }
@@ -586,7 +586,7 @@ public class MainPane extends BorderPane{
                             int count = 0;
                             for (int k = x; k < i; k++)
                             {
-                                if (myObservables[k][yy].getChessColor() == Color.WHITE)
+                                if (reversiModels[k][yy].getChessColor() == Color.WHITE)
                                 {
                                     count++;
                                 }
@@ -598,7 +598,7 @@ public class MainPane extends BorderPane{
                                 yy = y;
                                 for (int k = x; k < i; k++)
                                 {
-                                    myObservables[k][yy].updateObserver(Color.BLACK);
+                                    reversiModels[k][yy].updateObserver(Color.BLACK);
                                     yy--;
                                 }
                             }
@@ -610,7 +610,7 @@ public class MainPane extends BorderPane{
                             int count = 0;
                             for (int k = x; k < i; k++)
                             {
-                                if (myObservables[k][yy].getChessColor() == Color.WHITE)
+                                if (reversiModels[k][yy].getChessColor() == Color.WHITE)
                                 {
                                     count++;
                                 }
@@ -622,7 +622,7 @@ public class MainPane extends BorderPane{
                                 yy = y;
                                 for (int k = x; k < i; k++)
                                 {
-                                    myObservables[k][yy].updateObserver(Color.BLACK);
+                                    reversiModels[k][yy].updateObserver(Color.BLACK);
                                     yy++;
                                 }
                             }
@@ -634,25 +634,25 @@ public class MainPane extends BorderPane{
 
         }
         else
-      
+
         {
             for (int i = 0; i < 8; i++)
             {
-                if (myObservables[i][y].getChessColor() == Color.WHITE)
+                if (reversiModels[i][y].getChessColor() == Color.WHITE)
                 {
                     if ((i - x) >= 2)
                     {
                         int count = 0;
                         for (int k = x; k < i; k++)
                         {
-                            if (myObservables[k][y].getChessColor() == Color.BLACK)
+                            if (reversiModels[k][y].getChessColor() == Color.BLACK)
                                 count++;
                         }
 
                         if (count == (i - x - 1))
                         {
                             for (int k = x; k < i; k++)
-                                myObservables[k][y].updateObserver(Color.WHITE);
+                                reversiModels[k][y].updateObserver(Color.WHITE);
                         }
 
                     }
@@ -661,14 +661,14 @@ public class MainPane extends BorderPane{
                         int count = 0;
                         for (int k = x; k > i; k--)
                         {
-                            if (myObservables[k][y].getChessColor() == Color.BLACK)
+                            if (reversiModels[k][y].getChessColor() == Color.BLACK)
                                 count++;
                         }
 
                         if (count == (x - i - 1))
                         {
                             for (int k = x; k > i; k--)
-                                myObservables[k][y].updateObserver(Color.WHITE);
+                                reversiModels[k][y].updateObserver(Color.WHITE);
                         }
                     }
                 }
@@ -676,21 +676,21 @@ public class MainPane extends BorderPane{
 
             for (int j = 0; j < 8; j++)
             {
-                if (myObservables[x][j].getChessColor() == Color.WHITE)
+                if (reversiModels[x][j].getChessColor() == Color.WHITE)
                 {
                     if ((j - y) >= 2)
                     {
                         int count = 0;
                         for (int k = y; k < j; k++)
                         {
-                            if (myObservables[x][k].getChessColor() == Color.BLACK)
+                            if (reversiModels[x][k].getChessColor() == Color.BLACK)
                                 count++;
                         }
 
                         if (count == (j - y - 1))
                         {
                             for (int k = y; k < j; k++)
-                                myObservables[x][k].updateObserver(Color.WHITE);
+                                reversiModels[x][k].updateObserver(Color.WHITE);
                         }
                     }
                     if ((y - j) >= 2)
@@ -698,13 +698,13 @@ public class MainPane extends BorderPane{
                         int count = 0;
                         for (int k = y; k > j; k--)
                         {
-                            if (myObservables[x][k].getChessColor() == Color.BLACK)
+                            if (reversiModels[x][k].getChessColor() == Color.BLACK)
                                 count++;
                         }
                         if (count == (y - j - 1))
                         {
                             for (int k = y; k > j; k--)
-                                myObservables[x][k].updateObserver(Color.WHITE);
+                                reversiModels[x][k].updateObserver(Color.WHITE);
                         }
                     }
                 }
@@ -714,7 +714,7 @@ public class MainPane extends BorderPane{
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    if (myObservables[i][j].getChessColor() == Color.WHITE)
+                    if (reversiModels[i][j].getChessColor() == Color.WHITE)
                     {
                         if ((x - i) == (y - j) && (x - i) >= 2)
                         {
@@ -722,7 +722,7 @@ public class MainPane extends BorderPane{
                             int count = 0;
                             for (int k = x; k > i; k--)
                             {
-                                if (myObservables[k][yy].getChessColor() == Color.BLACK)
+                                if (reversiModels[k][yy].getChessColor() == Color.BLACK)
                                 {
                                     count++;
                                 }
@@ -733,7 +733,7 @@ public class MainPane extends BorderPane{
                                 yy = y;
                                 for (int k = x; k > i; k--)
                                 {
-                                    myObservables[k][yy].updateObserver(Color.WHITE);
+                                    reversiModels[k][yy].updateObserver(Color.WHITE);
                                     yy--;
                                 }
                             }
@@ -745,7 +745,7 @@ public class MainPane extends BorderPane{
                             int count = 0;
                             for (int k = x; k > i; k--)
                             {
-                                if (myObservables[k][yy].getChessColor() == Color.BLACK)
+                                if (reversiModels[k][yy].getChessColor() == Color.BLACK)
                                 {
                                     count++;
                                 }
@@ -757,7 +757,7 @@ public class MainPane extends BorderPane{
                                 yy = y;
                                 for (int k = x; k > i; k--)
                                 {
-                                    myObservables[k][yy].updateObserver(Color.WHITE);
+                                    reversiModels[k][yy].updateObserver(Color.WHITE);
                                     yy++;
                                 }
                             }
@@ -768,7 +768,7 @@ public class MainPane extends BorderPane{
                             int count = 0;
                             for (int k = x; k < i; k++)
                             {
-                                if (myObservables[k][yy].getChessColor() == Color.BLACK)
+                                if (reversiModels[k][yy].getChessColor() == Color.BLACK)
                                 {
                                     count++;
                                 }
@@ -780,7 +780,7 @@ public class MainPane extends BorderPane{
                                 yy = y;
                                 for (int k = x; k < i; k++)
                                 {
-                                    myObservables[k][yy].updateObserver(Color.WHITE);
+                                    reversiModels[k][yy].updateObserver(Color.WHITE);
                                     yy--;
                                 }
                             }
@@ -791,7 +791,7 @@ public class MainPane extends BorderPane{
                             int count = 0;
                             for (int k = x; k < i; k++)
                             {
-                                if (myObservables[k][yy].getChessColor() == Color.BLACK)
+                                if (reversiModels[k][yy].getChessColor() == Color.BLACK)
                                 {
                                     count++;
                                 }
@@ -802,7 +802,7 @@ public class MainPane extends BorderPane{
                                 yy = y;
                                 for (int k = x; k < i; k++)
                                 {
-                                    myObservables[k][yy].updateObserver(Color.WHITE);
+                                    reversiModels[k][yy].updateObserver(Color.WHITE);
                                     yy++;
                                 }
                             }
@@ -844,11 +844,11 @@ public class MainPane extends BorderPane{
      */
     private void whoWin(){
         if(blackChess > whiteChess) {
-            setAlert( "Congratulations on the victory of the Black side！");
+            showAndWait( "Congratulations on the victory of the Black side！");
         } else if(blackChess < whiteChess) {
-            setAlert("Congratulations on the victory of the While side！");
+            showAndWait("Congratulations on the victory of the While side！");
         } else {
-            setAlert("A draw.！");
+            showAndWait("A draw.！");
         }
     }
 
@@ -860,16 +860,16 @@ public class MainPane extends BorderPane{
         whiteChess = 0;
         for(int i = 0; i < 8; i++){
             for(int j = 0;j < 8; j++){
-                if(myObservables[i][j].getChessColor() == Color.BLACK)
+                if(reversiModels[i][j].getChessColor() == Color.BLACK)
                     blackChess++;
-                if(myObservables[i][j].getChessColor() == Color.WHITE)
+                if(reversiModels[i][j].getChessColor() == Color.WHITE)
                     whiteChess++;
             }
         }
         label.setText("White: " + whiteChess + "  - Black: " + blackChess);
     }
 
-    private void setAlert(String string) {
+    private void showAndWait(String string) {
         Alert information = new Alert(Alert.AlertType.INFORMATION, string);
         information.setTitle("Message");
         information.setHeaderText("Message");
@@ -882,13 +882,12 @@ public class MainPane extends BorderPane{
     public void saveGame() {
 
         try {
-            ReversiBoard reversiBoard = new ReversiBoard(myObservables, isBlackPlay);
+            Data data = new Data(reversiModels, isBlackPlay);
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(new File("save_game.dat")));
-            oos.writeObject(reversiBoard);
-            System.out.println("reversiBoard");
+            oos.writeObject(data);
             oos.close();
 
-            setAlert("Save successfully!");
+            showAndWait("Save successfully!");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -918,12 +917,12 @@ public class MainPane extends BorderPane{
             if(file.exists()) {
 
                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-                ReversiBoard reversiBoard = (ReversiBoard) ois.readObject();
-                MyObservable[][] readMyObservables = reversiBoard.getMyObservables();
-                isBlackPlay = reversiBoard.isBlackPlay();
+                Data data = (Data) ois.readObject();
+                ReversiModel[][] readReversiModels = data.getReversiModels();
+                isBlackPlay = data.isBlackPlay();
                 for(int i = 0; i < 8; i++) {
                     for(int j = 0; j < 8; j++) {
-                        myObservables[i][j].updateObserver(readMyObservables[i][j]);
+                        reversiModels[i][j].updateObserver(readReversiModels[i][j]);
                     }
                 }
                 String s;
@@ -934,7 +933,7 @@ public class MainPane extends BorderPane{
                 }
                 Platform.runLater(()-> {
                     updateLabel();
-                    setAlert("Open successfully and then go to " + s );
+                    showAndWait("Open successfully and then go to " + s );
                 });
             }
         } catch (Exception e) {

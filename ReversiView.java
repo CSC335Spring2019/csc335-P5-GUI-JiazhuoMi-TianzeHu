@@ -8,11 +8,12 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
-public class Main extends Application {
+public class ReversiView extends Application {
 
 
     private BorderPane root;
-    // Chessboard   pane l
+
+    // Chessboard panel
     private static MainPane mainPane;
 
     @Override
